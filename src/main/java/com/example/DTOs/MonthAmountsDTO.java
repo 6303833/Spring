@@ -1,6 +1,6 @@
 package com.example.DTOs;
 
-public class MonthlySummaryDTO {
+public class MonthAmountsDTO {
 
     private Double totalIncome;
     private Double totalExpenses;
@@ -23,13 +23,13 @@ public class MonthlySummaryDTO {
 	public void setNetSavings(Double netSavings) {
 		this.netSavings = netSavings;
 	}
-	public MonthlySummaryDTO(Double totalIncome, Double totalExpenses, Double netSavings) {
+	public MonthAmountsDTO(Double totalIncome, Double totalExpenses, Double netSavings) {
 		super();
 		this.totalIncome = totalIncome;
 		this.totalExpenses = totalExpenses;
 		this.netSavings = netSavings;
 	}
-	public MonthlySummaryDTO() {
+	public MonthAmountsDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

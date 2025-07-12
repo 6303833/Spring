@@ -9,11 +9,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.DTOs.CategoryAllAmountDTO;
-import com.example.DTOs.CategoryAmountDTO;
-import com.example.DTOs.MonthlySummaryDTO;
-import com.example.DTOs.TransactionsDTO;
-import com.example.DTOs.WeeklyTrendDTO;
+import com.example.DTOs.*;
 import com.example.repository.TransactionsRepo;
 
 @Service
@@ -26,7 +22,7 @@ public class ReportService {
 		this.txRepo=txrepo;
 	}
 
-	public MonthlySummaryDTO getMonthlySummary(int year, int month) {
+	public MonthAmountsDTO getMonthAmounts(int year, int month) {
         List<TransactionsDTO> txs = txService.getFilteredTransactions(
             null,
             null,
@@ -44,14 +40,14 @@ public class ReportService {
             .filter(t -> "EXPENSE".equalsIgnoreCase(t.getType()))
             .mapToDouble(TransactionsDTO::getAmount).sum();
 
-        return new MonthlySummaryDTO(income, expenses, income - expenses);
+        return new MonthAmountsDTO(income, expenses, income - expenses);
     }
 
-	public List<CategoryAmountDTO> getCategorySummaryForType(int year,int month,String type){
-    	return txRepo.getCategorySummary(year, month,type);
+	public List<CategoryAmountDTO> getCategoryAmount(int year,int month,String type){
+    	return txRepo.getCategoryAmount(year, month,type);
     }
-    public List<CategoryAllAmountDTO> getCategorySummaryInDetail(int year,int month ){
-    	return txRepo.getCategorySummaryInDetail(year, month );
+    public List<CategoryAllAmountsDTO> getCategoryAllAmounts(int year,int month ){
+    	return txRepo.getCategoryAllAmounts(year, month );
     }
     
     
@@ -81,4 +77,22 @@ public class ReportService {
 
         return result;
     }
+
+    public List<MonthlyTrendDTO> getMonthlyTrend(Integer year, String type) {
+        int y = (year != null) ? year : LocalDate.now().getYear();
+        if(type==null) type="EXPENSE";
+        List<MonthlyTrendDTO> resultFromDb = txRepo.getMonthlyAmountByYearAndType(y, type);
+
+        // Map results for fast lookup
+        Map<Integer, Double> monthMap = resultFromDb.stream()
+            .collect(Collectors.toMap(MonthlyTrendDTO::getMonth, MonthlyTrendDTO::getAmount));
+
+        List<MonthlyTrendDTO> fullResult = new ArrayList<>();
+        for (int i = 1; i <= 12; i++) {
+            fullResult.add(new MonthlyTrendDTO(i, monthMap.getOrDefault(i, 0.0)));
+        }
+
+        return fullResult;
+    }
+
 }

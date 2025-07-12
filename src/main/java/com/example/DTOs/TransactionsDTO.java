@@ -1,14 +1,28 @@
 package com.example.DTOs;
 
-import java.time.LocalDate;
+import java.time.LocalDate; 
 
+import jakarta.validation.constraints.*;
+import com.example.utils.*;
 public class TransactionsDTO {
 	private Long id;
+	@NotBlank(message = "Category is required", groups = {onCreate.class})
+	 @Pattern(regexp = "^\\S.*", message = "Category must not start with a space",groups= {onUpdate.class})
     private String category;
-    private String description;
+
+    @NotNull(message = "Amount is required", groups = {onCreate.class})
+    @Positive(message = "Amount must be greater than 0", groups = {onUpdate.class,onCreate.class})
     private Double amount;
-    private LocalDate date;
+
+    @NotBlank(message = "Type is required", groups = {onCreate.class})
+    @Pattern(regexp = "INCOME|EXPENSE", message = "Type must be either INCOME or EXPENSE", groups = {onUpdate.class,onCreate.class})
     private String type;
+
+    @NotNull(message = "Date is required", groups = {onCreate.class})
+    @PastOrPresent(message="Date should be past or present" , groups= {onCreate.class,onUpdate.class})
+    private LocalDate date;
+
+    private String description;
 	public Long getId() {
 		return id;
 	}

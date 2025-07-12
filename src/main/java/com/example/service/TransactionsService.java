@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.DTOs.CategoryAllAmountDTO;
-import com.example.DTOs.CategoryAmountDTO;
+import com.example.DTOs.BalanceSummaryDTO; 
 import com.example.DTOs.TransactionsDTO;
 import com.example.entity.Transactions;
+import com.example.exceptions.ResourceNotFoundException;
 import com.example.mapper.TransactionsMapper;
 import com.example.repository.TransactionsRepo;
 
@@ -44,28 +44,36 @@ public class TransactionsService {
     }
     public TransactionsDTO getTransactionById(Long id) {
         Transactions entity = txRepo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Transaction not found with id " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id " + id));
         return mapper.toDto(entity);
     }
 
     public TransactionsDTO updateTransaction(Long id, TransactionsDTO dto) {
         Transactions existing = txRepo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Transaction not found with id " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id " + id));
 
-        existing.setAmount(dto.getAmount());
-        existing.setCategory(dto.getCategory());
-        existing.setDate(dto.getDate());
-        existing.setDescription(dto.getDescription());
-        existing.setType(dto.getType());
+        if(dto.getAmount()!=null) existing.setAmount(dto.getAmount());
+        if(dto.getCategory()!=null) existing.setCategory(dto.getCategory());
+        if(dto.getDate()!=null) existing.setDate(dto.getDate());
+        if(dto.getDescription()!=null) existing.setDescription(dto.getDescription());
+        if(dto.getType()!=null) existing.setType(dto.getType());
 
         return mapper.toDto(txRepo.save(existing));
     }
 
     public void deleteTransaction(Long id) {
         if (!txRepo.existsById(id)) {
-            throw new RuntimeException("Transaction not found with id " + id);
+            throw new ResourceNotFoundException("Transaction not found with id " + id);
         }
         txRepo.deleteById(id);
+    }
+    
+    public BalanceSummaryDTO getTotalIncomeAndExpense() { 
+    	    List<Object[]> result = txRepo.getTotalIncomeAndExpense(); 
+    	    Object[] arr=result.get(0);
+    	    double income = (arr[0] != null)  ? ((Number) arr[0]).doubleValue()  : 0.0;
+    	    double expense = (arr[1] != null)  ? ((Number) arr[1]).doubleValue(): 0.0;
+    	    return new BalanceSummaryDTO(expense, income, income - expense);
     }
     
 

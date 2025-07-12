@@ -1,15 +1,15 @@
 package com.example.DTOs;
 
-public class CategoryAllAmountDTO {
+public class CategoryAllAmountsDTO {
 	private String category;
 	private Double expense;
 	private Double income;
 	private Double totalAmount;
-	public CategoryAllAmountDTO() {
+	public CategoryAllAmountsDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public CategoryAllAmountDTO(String category, Double expense, Double income, Double totalAmount) {
+	public CategoryAllAmountsDTO(String category, Double expense, Double income, Double totalAmount) {
 		super();
 		this.category = category;
 		this.expense = expense;
