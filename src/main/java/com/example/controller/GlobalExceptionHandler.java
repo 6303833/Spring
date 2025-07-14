@@ -30,10 +30,7 @@ public class GlobalExceptionHandler {
 	        }
 	    }
 	    return ResponseEntity.badRequest().body(errors);
-	}
-
-
-	
+	} 
 	
     // Handle @Valid validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
