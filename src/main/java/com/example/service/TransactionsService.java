@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.example.DTOs.BalanceSummaryDTO; 
@@ -51,21 +54,21 @@ public class TransactionsService {
     public TransactionsDTO updateTransaction(Long id, TransactionsDTO dto) {
         Transactions existing = txRepo.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id " + id));
-
-        if(dto.getAmount()!=null) existing.setAmount(dto.getAmount());
-        if(dto.getCategory()!=null) existing.setCategory(dto.getCategory());
-        if(dto.getDate()!=null) existing.setDate(dto.getDate());
-        if(dto.getDescription()!=null) existing.setDescription(dto.getDescription());
-        if(dto.getType()!=null) existing.setType(dto.getType());
-
+        
+	        if(dto.getAmount()!=null) existing.setAmount(dto.getAmount());
+	        if(dto.getCategory()!=null) existing.setCategory(dto.getCategory());
+	        if(dto.getDate()!=null) existing.setDate(dto.getDate());
+	        if(dto.getDescription()!=null) existing.setDescription(dto.getDescription());
+	        if(dto.getType()!=null) existing.setType(dto.getType());
+        
         return mapper.toDto(txRepo.save(existing));
     }
 
-    public void deleteTransaction(Long id) {
-        if (!txRepo.existsById(id)) {
-            throw new ResourceNotFoundException("Transaction not found with id " + id);
-        }
+    public boolean deleteTransaction(Long id) {
+    	TransactionsDTO tdto=this.getTransactionById(id);
+       if(tdto.getCategory().toLowerCase()=="goal") return false;
         txRepo.deleteById(id);
+        return true;
     }
     
     public BalanceSummaryDTO getTotalIncomeAndExpense() { 
@@ -77,5 +80,7 @@ public class TransactionsService {
     }
     
 
-     
+    
+	
+	
 }

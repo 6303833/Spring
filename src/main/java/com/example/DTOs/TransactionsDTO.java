@@ -7,8 +7,12 @@ import com.example.utils.*;
 public class TransactionsDTO {
 	private Long id;
 	@NotBlank(message = "Category is required", groups = {onCreate.class})
-	 @Pattern(regexp = "^\\S.*", message = "Category must not start with a space",groups= {onUpdate.class,onCreate.class})
-    private String category;
+	@Pattern(
+		    regexp = "^(?!\\s)(?!.*\\s$)(?![Gg][Oo][Aa][Ll]$).+",
+		    message = "Category must not be 'goal' (case-insensitive) and must not start or end with a space",
+		    groups = {onUpdate.class, onCreate.class}
+		)
+	private String category;
 
     @NotNull(message = "Amount is required", groups = {onCreate.class})
     @Positive(message = "Amount must be greater than 0", groups = {onUpdate.class,onCreate.class})

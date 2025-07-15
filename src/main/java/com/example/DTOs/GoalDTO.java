@@ -22,7 +22,7 @@ public class GoalDTO {
 	private Long id;
 	
 	@NotBlank(message = "Goal Name is required", groups = {onCreate.class})
-	 @Pattern(regexp = "^\\S.*", message = "Goal Name must not start with a space",groups= {onUpdate.class})
+	 @Pattern(regexp = "^\\S.*", message = "Goal Name must not start with a space",groups= {onCreate.class})
 	private String name;
 	
 	@NotNull(message = "Target Amount should not be empty",groups = {onCreate.class})

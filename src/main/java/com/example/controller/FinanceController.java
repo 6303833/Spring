@@ -62,9 +62,8 @@ public class FinanceController {
     }
 
     @DeleteMapping("/transactions/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        transactionService.deleteTransaction(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Boolean> deleteTransaction(@PathVariable Long id) {
+    	return ResponseEntity.ok(transactionService.deleteTransaction(id)); 
     }
     
     

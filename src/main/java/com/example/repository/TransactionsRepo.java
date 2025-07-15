@@ -3,6 +3,7 @@ package com.example.repository;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -45,6 +46,17 @@ public interface TransactionsRepo extends JpaRepository<Transactions, Long> {
 		       "ORDER BY MONTH(t.date)")
 		List<MonthlyTrendDTO> getMonthlyAmountByYearAndType(@Param("year") int year,
 		                                                      @Param("type") String type);
+		
+	
+	@Query("SELECT t.id FROM Transactions t WHERE LOWER(t.category) = 'goal' AND LOWER(t.description) LIKE LOWER(CONCAT(:prefix, '%'))")
+	List<Long> idsOfGoalStartingWith(@Param("prefix") String prefix);
+	
+	
+	@Modifying
+	@Query("DELETE FROM Transactions t WHERE t.id IN :ids")
+	void deleteByIds(@Param("ids") List<Long> ids);
+
+
 	
 	
 

@@ -43,10 +43,14 @@ public class GoalController {
     public ResponseEntity<GoalDTO> addGoal(@RequestBody @Validated(onCreate.class) GoalDTO dto) {
         return ResponseEntity.ok(goalService.addGoal(dto));
     }
-
+	@PatchMapping("/update-balance/{id}")
+    public ResponseEntity<Void> updateGoalBalance(@PathVariable Long id,@RequestBody Double amount) {
+        goalService.updateGoalBalance(id, amount);
+        return ResponseEntity.noContent().build();
+    }
     @PatchMapping("/{id}")
-    public ResponseEntity<GoalDTO> updateGoal(@PathVariable Long id, @RequestBody @Validated(onUpdate.class) GoalDTO dto) {
-        return ResponseEntity.ok(goalService.updateGoal(id, dto));
+    public ResponseEntity<GoalDTO> updateGoalNotBalance(@PathVariable Long id, @RequestBody @Validated(onUpdate.class) GoalDTO dto) {
+        return ResponseEntity.ok(goalService.updateGoalNotBalance(id, dto));
     }
 
     @DeleteMapping("/{id}")
